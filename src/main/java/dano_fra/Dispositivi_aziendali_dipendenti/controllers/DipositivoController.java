@@ -57,10 +57,10 @@ public class DipositivoController {
     }
 
     @DeleteMapping("/{dispositivoId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void findAndDelete(@PathVariable int dispositivoId) throws CorrectDeleteDispositivo {
         dispositivoService.findByIdAndDelete(dispositivoId);
-        throw new CorrectDeleteDispositivo();
+        throw new CorrectDeleteDispositivo("Dispositivo eliminato correttamente");
     }
 
 

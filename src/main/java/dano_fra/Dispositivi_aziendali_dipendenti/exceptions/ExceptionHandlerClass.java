@@ -46,4 +46,10 @@ public class ExceptionHandlerClass {
         return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
     }
 
+    @ExceptionHandler(CorrectDeleteDispositivo.class)
+    @ResponseStatus(HttpStatus.OK)
+    public ErrorsResponseDTO handleCorrectDelete(CorrectDeleteDispositivo ex) {
+        return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
 }

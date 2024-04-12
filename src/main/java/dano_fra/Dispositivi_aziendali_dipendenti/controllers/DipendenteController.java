@@ -56,7 +56,7 @@ public class DipendenteController {
     }
 
     @DeleteMapping("/{dipendenteId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void findAndDelete(@PathVariable int dipendenteId) throws CorrectDeleteDipendente {
         dipendenteService.findByIdAndDelete(dipendenteId);
         throw new CorrectDeleteDipendente();
