@@ -1,5 +1,7 @@
 package dano_fra.Dispositivi_aziendali_dipendenti.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import dano_fra.Dispositivi_aziendali_dipendenti.entities.Dipendente;
 import dano_fra.Dispositivi_aziendali_dipendenti.exceptions.NotFoundException;
 import dano_fra.Dispositivi_aziendali_dipendenti.payloads.DipendenteDTO;
@@ -11,13 +13,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
 public class DipendenteService {
     @Autowired
     private DipendenteDAO dipendenteDAO;
+    @Autowired
+    private Cloudinary cloudinary;
 
     public Dipendente save(DipendenteDTO newDipendente) throws BadRequestException {
         Optional<Dipendente> existingDipendente = this.dipendenteDAO.findByEmail(newDipendente.email());
@@ -45,8 +51,9 @@ public class DipendenteService {
     }
 
     public void findByIdAndDelete(int id) {
-        Dipendente found = this.findById(id);
-        this.dipendenteDAO.delete(found);
+        Dipendente dipendente = this.findById(id);
+        this.dipendenteDAO.delete(dipendente);
+        System.out.println("Dipendente eliminato con successo!");
     }
 
     public Dipendente findByIdAndUpdate(int id, DipendenteDTO newDipendente) {
@@ -57,6 +64,17 @@ public class DipendenteService {
         dipendente.setEmail(newDipendente.email());
         dipendente.setAvatar("https://ui-avatars.com/api/?name=" + newDipendente.nome() + "+" + newDipendente.cognome());
         return this.dipendenteDAO.save(dipendente);
+    }
 
+    public String upload(MultipartFile image) throws IOException {
+        String url = (String) cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap()).get("url");
+        return url;
+    }
+
+    public Dipendente uploadDipendenteImageToId(MultipartFile image, int dipendenteId) throws IOException {
+        Dipendente dipendente = this.findById(dipendenteId);
+        dipendente.setAvatar(this.upload(image));
+        this.dipendenteDAO.save(dipendente);
+        return dipendente;
     }
 }

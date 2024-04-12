@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/dipendente")
@@ -49,6 +52,17 @@ public class DipendenteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findAndDelete(@PathVariable int dipendenteId) {
         dipendenteService.findByIdAndDelete(dipendenteId);
+    }
+
+    @PostMapping("/upload")
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile image) throws IOException {
+        return this.dipendenteService.upload(image);
+    }
+
+    @PostMapping("/upload/{dipendenteId}")
+    public String uploadDipendenteImage(@RequestParam("avatar") MultipartFile image, @PathVariable int dipendenteId) throws IOException {
+        this.dipendenteService.uploadDipendenteImageToId(image, dipendenteId);
+        return this.dipendenteService.upload(image);
     }
 
 }

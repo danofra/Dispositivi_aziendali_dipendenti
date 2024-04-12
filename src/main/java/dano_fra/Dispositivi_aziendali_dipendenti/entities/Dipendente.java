@@ -14,8 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "dipendenti")
+@Table(name = "dipendente")
 public class Dipendente {
+    @JsonIgnore
+    @OneToMany(mappedBy = "dipendente")
+    List<Dispositivo> dispositivo;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -24,8 +27,5 @@ public class Dipendente {
     private String cognome;
     private String email;
     private String avatar;
-    @JsonIgnore
-    @OneToMany(mappedBy = "dipendente")
-    List<Dipendente> dipendente;
 
 }
