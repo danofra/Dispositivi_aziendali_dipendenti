@@ -44,12 +44,11 @@ public class DipendenteController {
     public Dipendente findAndUpdate(@PathVariable int dipendenteId, @RequestBody DipendenteDTO body) {
         return dipendenteService.findByIdAndUpdate(dipendenteId, body);
     }
-    
+
     @DeleteMapping("/{dipendenteId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findAndDelete(@PathVariable int dipendenteId) {
         dipendenteService.findByIdAndDelete(dipendenteId);
     }
-
 
 }
