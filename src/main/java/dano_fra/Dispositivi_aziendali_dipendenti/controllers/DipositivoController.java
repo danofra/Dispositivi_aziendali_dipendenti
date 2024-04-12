@@ -3,11 +3,13 @@ package dano_fra.Dispositivi_aziendali_dipendenti.controllers;
 import dano_fra.Dispositivi_aziendali_dipendenti.entities.Dispositivo;
 import dano_fra.Dispositivi_aziendali_dipendenti.enums.stato;
 import dano_fra.Dispositivi_aziendali_dipendenti.enums.tipologia;
+import dano_fra.Dispositivi_aziendali_dipendenti.exceptions.BadRequestException;
 import dano_fra.Dispositivi_aziendali_dipendenti.payloads.DispositivoDTO;
 import dano_fra.Dispositivi_aziendali_dipendenti.services.DispositivoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,24 +21,16 @@ public class DipositivoController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Dispositivo dispositivo(@RequestBody @Validated DispositivoDTO newDispositivo) throws Exception {
+    public DispositivoDTO dispositivo(@RequestBody @Validated DispositivoDTO body, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new BadRequestException(result.getAllErrors());
+        }
         Dispositivo dispositivo = new Dispositivo();
-        dispositivo.setTipologia(tipologia.valueOf(newDispositivo.tipologia()));
-        dispositivo.setStato(stato.valueOf(newDispositivo.stato()));
-        dispositivoService.save(newDispositivo);
-        return dispositivo;
+        dispositivo.setTipologia(tipologia.valueOf(body.tipologia()));
+        dispositivo.setStato(stato.valueOf(body.stato()));
+        dispositivoService.save(body);
+        return body;
     }
-
-//    @PatchMapping("/{dispositivoId}/{dipendenteId}")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public Dispositivo dispositivo(@PathVariable int dispositivoId, @RequestBody @Validated DispositivoDTO newDispositivo) throws Exception {
-//        Dispositivo dispositivo = dispositivoService.findById(dispositivoId);
-//        dispositivo.setTipologia(tipologia.valueOf(newDispositivo.tipologia()));
-//        dispositivo.setStato(stato.valueOf(newDispositivo.stato()));
-//        dispositivo.setDipendente(dipendenteId);
-//        dispositivoService.save(newDispositivo);
-//        return dispositivo;
-//    }
 
     @GetMapping("")
     public Page<Dispositivo> getAllPosts(@RequestParam(defaultValue = "0") int page,
@@ -56,7 +50,7 @@ public class DipositivoController {
     }
 
 
-    @PatchMapping("/{dispositivoId}/{dipendenteId}")
+    @PatchMapping("/upload/{dispositivoId}/{dipendenteId}")
     public Dispositivo findByIdDispositivoDipendenteAndUpdate(@PathVariable int dispositivoId, @PathVariable int dipendenteId) {
         return dispositivoService.findByIdDispositivoDipendenteAndUpdate(dispositivoId, dipendenteId);
     }

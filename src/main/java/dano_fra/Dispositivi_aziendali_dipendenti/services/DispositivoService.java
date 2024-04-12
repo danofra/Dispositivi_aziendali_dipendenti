@@ -56,9 +56,9 @@ public class DispositivoService {
         if (dispositivo.getStato() == stato.DISPONIBILE) {
             dispositivo.setStato(stato.ASSEGNATO);
             dispositivo.setDipendente(dipendente);
+            dispositivoDAO.save(dispositivo);
         } else {
-            dispositivo.setStato(stato.DISPONIBILE);
-            dispositivo.setDipendente(null);
+            throw new NotFoundException("Dispositivo non disponibile");
         }
         return dispositivo;
     }
