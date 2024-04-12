@@ -53,7 +53,6 @@ public class DipendenteService {
     public void findByIdAndDelete(int id) {
         Dipendente dipendente = this.findById(id);
         this.dipendenteDAO.delete(dipendente);
-        System.out.println("Dipendente eliminato con successo!");
     }
 
     public Dipendente findByIdAndUpdate(int id, DipendenteDTO newDipendente) {

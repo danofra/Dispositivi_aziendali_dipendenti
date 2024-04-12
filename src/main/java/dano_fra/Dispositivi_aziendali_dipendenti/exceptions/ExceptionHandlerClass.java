@@ -40,9 +40,9 @@ public class ExceptionHandlerClass {
     }
 
 
-    @ExceptionHandler(CorrectDelete.class)
+    @ExceptionHandler(CorrectDeleteDipendente.class)
     @ResponseStatus(HttpStatus.OK)
-    public ErrorsResponseDTO handleCorrectDelete(CorrectDelete ex) {
+    public ErrorsResponseDTO handleCorrectDelete(CorrectDeleteDipendente ex) {
         return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
     }
 

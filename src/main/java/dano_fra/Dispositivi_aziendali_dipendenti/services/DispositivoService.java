@@ -39,8 +39,8 @@ public class DispositivoService {
     }
 
     public void findByIdAndDelete(int id) {
-        Dispositivo found = this.findById(id);
-        this.dispositivoDAO.delete(found);
+        Dispositivo dispositivo = this.findById(id);
+        this.dispositivoDAO.delete(dispositivo);
     }
 
     public Dispositivo findByIdAndUpdate(int id, DispositivoDTO newDispositivo) {

@@ -2,7 +2,7 @@ package dano_fra.Dispositivi_aziendali_dipendenti.controllers;
 
 import dano_fra.Dispositivi_aziendali_dipendenti.entities.Dipendente;
 import dano_fra.Dispositivi_aziendali_dipendenti.exceptions.BadRequestException;
-import dano_fra.Dispositivi_aziendali_dipendenti.exceptions.CorrectDelete;
+import dano_fra.Dispositivi_aziendali_dipendenti.exceptions.CorrectDeleteDipendente;
 import dano_fra.Dispositivi_aziendali_dipendenti.payloads.DipendenteDTO;
 import dano_fra.Dispositivi_aziendali_dipendenti.services.DipendenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,12 +57,9 @@ public class DipendenteController {
 
     @DeleteMapping("/{dipendenteId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void findAndDelete(@PathVariable int dipendenteId) throws CorrectDelete {
-        if (dipendenteService.findById(dipendenteId) != null) {
-            throw new CorrectDelete();
-        } else {
-            dipendenteService.findByIdAndDelete(dipendenteId);
-        }
+    public void findAndDelete(@PathVariable int dipendenteId) throws CorrectDeleteDipendente {
+        dipendenteService.findByIdAndDelete(dipendenteId);
+        throw new CorrectDeleteDipendente();
     }
 
     @PostMapping("/upload")

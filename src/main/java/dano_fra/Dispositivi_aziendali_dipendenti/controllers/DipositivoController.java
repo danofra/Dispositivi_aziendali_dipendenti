@@ -4,6 +4,7 @@ import dano_fra.Dispositivi_aziendali_dipendenti.entities.Dispositivo;
 import dano_fra.Dispositivi_aziendali_dipendenti.enums.stato;
 import dano_fra.Dispositivi_aziendali_dipendenti.enums.tipologia;
 import dano_fra.Dispositivi_aziendali_dipendenti.exceptions.BadRequestException;
+import dano_fra.Dispositivi_aziendali_dipendenti.exceptions.CorrectDeleteDispositivo;
 import dano_fra.Dispositivi_aziendali_dipendenti.payloads.DispositivoDTO;
 import dano_fra.Dispositivi_aziendali_dipendenti.services.DispositivoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,9 @@ public class DipositivoController {
 
     @DeleteMapping("/{dispositivoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void findAndDelete(@PathVariable int dispositivoId) {
+    public void findAndDelete(@PathVariable int dispositivoId) throws CorrectDeleteDispositivo {
         dispositivoService.findByIdAndDelete(dispositivoId);
+        throw new CorrectDeleteDispositivo();
     }
 
 
