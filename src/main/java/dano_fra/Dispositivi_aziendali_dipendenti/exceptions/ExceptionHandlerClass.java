@@ -39,4 +39,11 @@ public class ExceptionHandlerClass {
         return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
     }
 
+
+    @ExceptionHandler(CorrectDelete.class)
+    @ResponseStatus(HttpStatus.OK)
+    public ErrorsResponseDTO handleCorrectDelete(CorrectDelete ex) {
+        return new ErrorsResponseDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
 }

@@ -1,5 +1,6 @@
 package dano_fra.Dispositivi_aziendali_dipendenti.services;
 
+import dano_fra.Dispositivi_aziendali_dipendenti.entities.Dipendente;
 import dano_fra.Dispositivi_aziendali_dipendenti.entities.Dispositivo;
 import dano_fra.Dispositivi_aziendali_dipendenti.enums.stato;
 import dano_fra.Dispositivi_aziendali_dipendenti.enums.tipologia;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 public class DispositivoService {
     @Autowired
     private DispositivoDAO dispositivoDAO;
+    @Autowired
+    private DipendenteService dipendenteService;
 
     public Dispositivo save(DispositivoDTO newDispositivo) {
         Dispositivo dispositivo = new Dispositivo();
@@ -45,7 +48,19 @@ public class DispositivoService {
         dispositivo.setStato(stati(newDispositivo.stato()));
         dispositivo.setTipologia(tipologie(newDispositivo.tipologia()));
         return this.dispositivoDAO.save(dispositivo);
+    }
 
+    public Dispositivo findByIdDispositivoDipendenteAndUpdate(int dispositivoId, int dipendenteId) {
+        Dispositivo dispositivo = this.findById(dispositivoId);
+        Dipendente dipendente = this.dipendenteService.findById(dipendenteId);
+        if (dispositivo.getStato() == stato.DISPONIBILE) {
+            dispositivo.setStato(stato.ASSEGNATO);
+            dispositivo.setDipendente(dipendente);
+        } else {
+            dispositivo.setStato(stato.DISPONIBILE);
+            dispositivo.setDipendente(null);
+        }
+        return dispositivo;
     }
 
     public tipologia tipologie(String tipoTipologia) {

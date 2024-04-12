@@ -1,11 +1,15 @@
 package dano_fra.Dispositivi_aziendali_dipendenti.controllers;
 
 import dano_fra.Dispositivi_aziendali_dipendenti.entities.Dipendente;
+import dano_fra.Dispositivi_aziendali_dipendenti.exceptions.BadRequestException;
+import dano_fra.Dispositivi_aziendali_dipendenti.exceptions.CorrectDelete;
 import dano_fra.Dispositivi_aziendali_dipendenti.payloads.DipendenteDTO;
 import dano_fra.Dispositivi_aziendali_dipendenti.services.DipendenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +24,10 @@ public class DipendenteController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Dipendente dipendente(@RequestBody DipendenteDTO body) throws Exception {
+    public DipendenteDTO dipendente(@RequestBody @Validated DipendenteDTO body, BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            throw new BadRequestException(result.getAllErrors());
+        }
         Dipendente dipendente = new Dipendente();
         dipendente.setUsername(body.username());
         dipendente.setNome(body.nome());
@@ -28,7 +35,7 @@ public class DipendenteController {
         dipendente.setEmail(body.email());
         dipendente.setAvatar("https://ui-avatars.com/api/?name=" + body.nome() + "+" + body.cognome());
         dipendenteService.save(body);
-        return dipendente;
+        return body;
     }
 
     @GetMapping("")
@@ -50,8 +57,12 @@ public class DipendenteController {
 
     @DeleteMapping("/{dipendenteId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void findAndDelete(@PathVariable int dipendenteId) {
-        dipendenteService.findByIdAndDelete(dipendenteId);
+    public void findAndDelete(@PathVariable int dipendenteId) throws CorrectDelete {
+        if (dipendenteService.findById(dipendenteId) != null) {
+            throw new CorrectDelete();
+        } else {
+            dipendenteService.findByIdAndDelete(dipendenteId);
+        }
     }
 
     @PostMapping("/upload")

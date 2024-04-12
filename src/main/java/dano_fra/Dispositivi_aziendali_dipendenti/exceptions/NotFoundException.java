@@ -6,7 +6,7 @@ public class NotFoundException extends RuntimeException {
     }
 
     public NotFoundException(int id) {
-        super(id + " non trovato!");
+        super("La tua ricerca non è andata a buon fine! L' id " + id + " non è stato trovato!");
     }
 }
 
