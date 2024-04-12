@@ -23,7 +23,7 @@ public class DispositivoService {
 
     public Dispositivo save(DispositivoDTO newDispositivo) {
         Dispositivo dispositivo = new Dispositivo();
-        dispositivo.setStato(stati(newDispositivo.stato()));
+        dispositivo.setStato(stato.DISPONIBILE);
         dispositivo.setTipologia(tipologie(newDispositivo.tipologia()));
         return this.dispositivoDAO.save(dispositivo);
     }
@@ -58,7 +58,13 @@ public class DispositivoService {
             dispositivo.setDipendente(dipendente);
             dispositivoDAO.save(dispositivo);
         } else {
-            throw new NotFoundException("Dispositivo non disponibile");
+            if (dispositivo.getStato() == stato.IN_MANUTENZIONE) {
+                throw new NotFoundException("Dispositivo in manutenzione!");
+            } else if (dispositivo.getStato() == stato.DISMESSO) {
+                throw new NotFoundException("Dispositivo non più disponibile!");
+            } else if (dispositivo.getStato() == stato.ASSEGNATO) {
+                throw new NotFoundException("Dispositivo già assegnato!");
+            }
         }
         return dispositivo;
     }
@@ -84,7 +90,7 @@ public class DispositivoService {
                 return stato.IN_MANUTENZIONE;
             case "ASSEGNATO":
                 return stato.ASSEGNATO;
-            case "DIMESSO":
+            case "DISMESSO":
                 return stato.DISMESSO;
             default:
                 return null;
