@@ -41,17 +41,20 @@ public class DipositivoController {
     }
 
     @GetMapping("/{dispositivoId}")
+    @ResponseStatus(HttpStatus.OK)
     public Dispositivo findById(@PathVariable int dispositivoId) {
         return dispositivoService.findById(dispositivoId);
     }
 
     @PutMapping("/{dispositivoId}")
+    @ResponseStatus(HttpStatus.OK)
     public Dispositivo findAndUpdate(@PathVariable int dispositivoId, @RequestBody DispositivoDTO body) {
         return dispositivoService.findByIdAndUpdate(dispositivoId, body);
     }
 
 
     @PatchMapping("/upload/{dispositivoId}/{dipendenteId}")
+    @ResponseStatus(HttpStatus.OK)
     public Dispositivo findByIdDispositivoDipendenteAndUpdate(@PathVariable int dispositivoId, @PathVariable int dipendenteId) {
         return dispositivoService.findByIdDispositivoDipendenteAndUpdate(dispositivoId, dipendenteId);
     }

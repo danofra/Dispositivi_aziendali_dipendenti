@@ -63,6 +63,7 @@ public class DipendenteController {
     }
 
     @PostMapping("/upload")
+    @ResponseStatus(HttpStatus.OK)
     public String uploadAvatar(@RequestParam("avatar") MultipartFile image) throws IOException {
         return this.dipendenteService.upload(image);
     }
